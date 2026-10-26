@@ -1,4 +1,5 @@
 import { ArrowRight, Coffee, Dices, Footprints, LocateFixed, MapPin, ShieldCheck, SlidersHorizontal, Soup, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
@@ -36,15 +37,23 @@ const PREVIEW_ROWS = [
 
 function FindFoodCta({ className = "" }: { className?: string }) {
   return (
-    <Link to="/nearby" state={startState} className={`btn-primary px-7 py-4 text-base shadow-card ${className}`}>
+    <Link
+      to="/nearby"
+      state={startState}
+      className={`btn-primary group px-7 py-4 text-base shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 ${className}`}
+    >
       <MapPin className="h-5 w-5" aria-hidden="true" />
       Find Food Near Me
-      <ArrowRight className="h-5 w-5" aria-hidden="true" />
+      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
     </Link>
   );
 }
 
 export function LandingPage() {
+  // Decorative practice spin: always lands somewhere random, never "picks" anything.
+  const [previewRotation, setPreviewRotation] = useState(-12);
+  const spinPreview = () => setPreviewRotation((r) => r + 720 + Math.floor(Math.random() * 360));
+
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden">
       <Header>
@@ -85,16 +94,29 @@ export function LandingPage() {
             </div>
 
             <div className="relative mx-auto w-full max-w-[460px]">
-              <div className="absolute -left-2 top-8 z-10 hidden rotate-[-6deg] items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2 text-sm font-semibold shadow-card sm:flex">
-                <Soup className="h-5 w-5 text-tomato" aria-hidden="true" /> Hungry?
+              <div className="float-slow absolute -left-2 top-8 z-10 hidden sm:block">
+                <div className="group flex cursor-default rotate-[-6deg] items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2 text-sm font-semibold shadow-card transition-all duration-300 ease-out hover:rotate-0 hover:scale-125 hover:border-tomato/40 hover:shadow-lg">
+                  <Soup className="h-5 w-5 text-tomato transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110" aria-hidden="true" />
+                  Hungry?
+                </div>
               </div>
-              <div className="absolute -right-2 bottom-10 z-10 hidden rotate-[5deg] items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2 text-sm font-semibold shadow-card sm:flex">
-                <Coffee className="h-5 w-5 text-tomato" aria-hidden="true" /> Teh tarik after?
+              <div className="float-slow float-delay absolute -right-2 bottom-10 z-10 hidden sm:block">
+                <div className="group flex cursor-default rotate-[5deg] items-center gap-2 rounded-2xl border border-line bg-surface px-3 py-2 text-sm font-semibold shadow-card transition-all duration-300 ease-out hover:rotate-0 hover:scale-125 hover:border-tomato/40 hover:shadow-lg">
+                  <Coffee className="h-5 w-5 text-tomato transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
+                  Teh tarik after?
+                </div>
               </div>
-              <div className="rounded-[2.5rem] border border-line bg-surface/70 p-6 shadow-card sm:p-8">
-                <WheelGraphic labels={HERO_LABELS} rotation={-12} className="h-auto w-full" />
-              </div>
-              <p className="mt-3 text-center text-xs text-muted">Illustration — real picks come from places near you.</p>
+              <button
+                type="button"
+                onClick={spinPreview}
+                aria-label="Give the preview wheel a spin (just for fun)"
+                className="block w-full rounded-[2.5rem] border border-line bg-surface/70 p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-tomato/30 hover:shadow-xl sm:p-8"
+              >
+                <WheelGraphic labels={HERO_LABELS} rotation={previewRotation} durationMs={2600} className="h-auto w-full" />
+              </button>
+              <p className="mt-3 text-center text-xs text-muted">
+                Tap the wheel for a practice spin — real picks come from places near you.
+              </p>
             </div>
           </div>
         </section>
@@ -106,9 +128,12 @@ export function LandingPage() {
             <p className="mt-2 max-w-xl text-muted">Three quick steps from “makan apa?” to “jom, let's go”.</p>
             <ol className="mt-10 grid gap-5 md:grid-cols-3">
               {STEPS.map((s, i) => (
-                <li key={s.title} className="card p-6">
+                <li
+                  key={s.title}
+                  className="card group p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-tomato/30 hover:shadow-xl"
+                >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-tomato-soft text-tomato">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-tomato-soft text-tomato transition-all duration-300 group-hover:rotate-[-8deg] group-hover:scale-110 group-hover:bg-tomato group-hover:text-white">
                       <s.icon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <span className="text-sm font-bold text-muted">Step {i + 1}</span>
@@ -142,7 +167,10 @@ export function LandingPage() {
               <p className="text-sm font-semibold text-muted">3 eligible places · within 2 km</p>
               <ul className="mt-4 space-y-3" aria-label="Sample results (not real places)">
                 {PREVIEW_ROWS.map((r) => (
-                  <li key={r.name} className="flex items-center justify-between gap-3 rounded-2xl border border-line p-4">
+                  <li
+                    key={r.name}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-line p-4 transition-all duration-200 hover:translate-x-1 hover:border-tomato/40 hover:bg-cream"
+                  >
                     <div className="min-w-0">
                       <p className="truncate font-bold">{r.name}</p>
                       <p className="text-sm text-muted">{r.cat} · Price unknown</p>

@@ -107,3 +107,20 @@
     transform: none;
   }
 }
+
+/* Gentle bobbing for the landing-page badges (disabled by the reduced-motion rule above). */
+.float-slow {
+  animation: float-slow 5s ease-in-out infinite;
+}
+.float-delay {
+  animation-delay: -2.5s;
+}
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
